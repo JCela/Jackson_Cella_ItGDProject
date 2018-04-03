@@ -5,6 +5,12 @@ TagManager:
   serializedVersion: 2
   tags:
   - Bullet
+  - Player 1
+  - Player 2
+  - PowerUp
+  - Slow
+  - Speed
+  - Splat
   layers:
   - Default
   - TransparentFX
@@ -20,7 +26,7 @@ TagManager:
   - Bullet
   - Wall
   - Finish
-  - 
+  - Magnify
   - 
   - 
   - 

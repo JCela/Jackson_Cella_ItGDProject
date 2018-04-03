@@ -4,4 +4,10 @@
 EditorBuildSettings:
   m_ObjectHideFlags: 0
   serializedVersion: 2
-  m_Scenes: []
+  m_Scenes:
+  - enabled: 1
+    path: Assets/MainMenuScreen.unity
+    guid: cd03c0236e1404b96b03f6e96b92d097
+  - enabled: 1
+    path: Assets/ClimbingGame.unity
+    guid: 1ffd3193aef894b0c8cb9ef72b26f4a5
