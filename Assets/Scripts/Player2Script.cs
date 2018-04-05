@@ -13,11 +13,12 @@ public class Player2Script : MonoBehaviour {
 	public GameObject HUD;
 	GameObject MainCamera1;
 	public GameObject ScreenSplat1;
+	public Animator Player2Animator;
 
 	float speed = 0.1f;
 	float jumpForce = 14;
 	float shootTimer = 20;
-	float freezeTimer = 2;
+	float freezeTimer = 5;
 	float dashCounter = 5;
 	float canDashTimer2 = 0;
 	float dashSpeed2 = 0.5f;
@@ -105,10 +106,40 @@ public class Player2Script : MonoBehaviour {
 				this.GetComponent<Transform> ().Translate (new Vector3 (0.2f, 0));
 			}
 			if (Input.GetKeyDown (KeyCode.I) && groundedtwo) {
-				playerRigid.velocity = new Vector2 (playerRigid.velocity.x, jumpForce+5); // Jump mechanic, checks to see if player is Grounded to jump
+				playerRigid.velocity = new Vector2 (playerRigid.velocity.x, jumpForce); // Jump mechanic, checks to see if player is Grounded to jump
 				groundedtwo = false;
 			}
 		}
+
+		bool isRunning2 = false;
+		bool isJumping2 = false;
+		bool isFrozen2 = false;
+		if (Input.GetKey (KeyCode.L)) {
+			isRunning2 = true;
+			player.flipX = false;
+		}
+		if (Input.GetKey (KeyCode.J)) {
+			isRunning2 = true;
+			player.flipX = true;
+		}
+		if (Input.GetKey (KeyCode.J) && Input.GetKey (KeyCode.L)) {
+			isRunning2 = false;
+		}
+		if (Input.GetKey (KeyCode.I)) {
+			isJumping2 = true;
+		}
+		if (groundedtwo) {
+			isJumping2 = false;
+		}
+		if (Input.GetKey (KeyCode.I) && Input.GetKey (KeyCode.J)) {
+			isRunning2 = false;
+		}
+		if (Input.GetKey (KeyCode.I) && Input.GetKey (KeyCode.J)) {
+			isRunning2 = false;
+		}
+
+		Player2Animator.SetBool ("isRunning2", isRunning2);
+		Player2Animator.SetBool ("isJumping2", isJumping2);
 
 		if (freeze == false && speedTimer2 > 0 && canDashTimer2 <0) {
 			if (Input.GetKey (KeyCode.J)) {
@@ -208,15 +239,20 @@ public class Player2Script : MonoBehaviour {
 		}
 
 	}
+		Player2Animator.SetBool ("isFrozen2", isFrozen2);
 	if (hit == true) {
 			freezeTimer -= 1.75f * Time.deltaTime;
-			if (freezeTimer > 0 && freezeTimer < 2) {
+			if (freezeTimer > 0 && freezeTimer < 5) {
 				freeze = true;
+				isFrozen2 = true;
+				isRunning2 = false;
+				isJumping2 = false;
 			}
 			if (freezeTimer < 0) {
 				freeze = false;
-				freezeTimer = 2;
+				freezeTimer = 5;
 				hit = false;
+				isFrozen2 = false;
 			}
 
 		}
@@ -236,6 +272,7 @@ public class Player2Script : MonoBehaviour {
 		GameObject bulletS = Instantiate (BulletSpritePrefab, firePointP.position, firePointP.rotation);
 		bulletS.GetComponent<BulletScript> ().myCaster = this.gameObject;
 		bulletS.GetComponent<Rigidbody2D>().AddForce ((firedirectionPositionP-firePointPosition).normalized*10, ForceMode2D.Impulse);
+	
 }
 	void Shoot2 () {
 		Vector2 firePointPosition = new Vector2 (firePointP.position.x, firePointP.position.y);
@@ -244,6 +281,7 @@ public class Player2Script : MonoBehaviour {
 		GameObject bulletS = Instantiate (BulletSpritePrefab, firePointP.position, firePointP.rotation);
 		bulletS.GetComponent<BulletScript> ().myCaster = this.gameObject;
 		bulletS.GetComponent<Rigidbody2D>().AddForce ((firedirectionPosition2P-firePointPosition).normalized*10, ForceMode2D.Impulse);
+	
 }
 	void Shoot3 () {
 		Vector2 firePointPosition = new Vector2 (firePointP.position.x, firePointP.position.y);
@@ -269,12 +307,14 @@ public class Player2Script : MonoBehaviour {
 		}
 	}
 	void OnCollisionEnter2D(Collision2D otherObjectC){
+		Debug.Log (hit);
 		CollisionDetection (otherObjectC.gameObject);
 	}
 	void CollisionDetection (GameObject otherObjectD) {
 		if (otherObjectD.tag == "Bullet" && otherObjectD.GetComponent<BulletScript>().myCaster != this.gameObject) {
 			Destroy (otherObjectD);
 			hit = true;
+			//Debug.Log (hit);
 		}
 	}
 	void Pickup2 () {

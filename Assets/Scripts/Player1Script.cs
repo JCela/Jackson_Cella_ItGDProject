@@ -9,25 +9,24 @@ public class Player1Script : MonoBehaviour {
 	Rigidbody2D playerRigid;
     Collider2D playerCollider;
 	public Animator Player1Animator;
-
-
 	public GameObject HUD;
 	GameObject MainCamera2;
 	public GameObject ScreenSplat2;
-
 	public LayerMask whatToHit;
-
-	//public Text dashTimerText;
 	public Sprite victorypng;
+	public GameObject BulletSpritePrefab;
 
 	float jumpForce = 14;
 	float speed = 0.1f;
 	float shootTimer = 20;
-	float freezeTimer = 2;
+	float freezeTimer = 5;
 	float dash = 0.25f;
 	float dashspeed = .5f;
 	float dashCounter = -5;
 	float canDashTimer = 0;
+	private float pickupTimer1 = 2;
+	private float speedTimer1 = 2;
+	private float splatTimer1 = 2;
 
 	bool isLeft = true;
 	bool hit = false;
@@ -46,11 +45,6 @@ public class Player1Script : MonoBehaviour {
 	Transform firedirection3;
 	Transform vicDetector;
 
-	public GameObject BulletSpritePrefab;
-
-	private float pickupTimer1 = 2;
-	private float speedTimer1 = 2;
-	private float splatTimer1 = 2;
 
 
 
@@ -59,24 +53,18 @@ public class Player1Script : MonoBehaviour {
 
 	void Start () {
 
-		MainCamera2 = GameObject.Find ("Main Camera 2");
+		MainCamera2 = GameObject.Find ("Main Camera 2");//Camera
 		ScreenSplat2 = GameObject.Find ("ScreenSplat2");
-	
-
 		player = this.GetComponent<SpriteRenderer> ();
-
 		playerRigid = this.GetComponent<Rigidbody2D> ();
-
 		playerCollider = this.GetComponent<Collider2D> ();
-
 		groundDetector = transform.Find("GroundDetector");
 		vicDetector = transform.Find ("FinishDetector");
-
 		firePoint = transform.Find ("firePoint");
+
 		firedirection1 = transform.Find ("firedirection1");
 		firedirection2 = transform.Find ("firedirection2");
 		firedirection3 = transform.Find ("firedirection3");
-
 
 		leftEdge = GameObject.Find ("LeftEdge").transform;
 		rightEdge = GameObject.Find ("RightEdge").transform;
@@ -86,12 +74,12 @@ public class Player1Script : MonoBehaviour {
 
 	void Update () {
 		//*********Movement**********//
-		dashCounter += 1*Time.deltaTime;
+		dashCounter += 1*Time.deltaTime; //how often you can dash
 
-		canDashTimer -= 1 * Time.deltaTime;
-		pickupTimer1 = pickupTimer1 + 1 * Time.deltaTime;
-		speedTimer1 = speedTimer1 + 1 * Time.deltaTime;
-		splatTimer1 = splatTimer1 + 1 * Time.deltaTime;
+		canDashTimer -= 1 * Time.deltaTime; //timer for how long the dash lasts
+		pickupTimer1 = pickupTimer1 + 1 * Time.deltaTime; //timer for how long the flip lasts
+		speedTimer1 = speedTimer1 + 1 * Time.deltaTime; //timer for how long speed up lasts
+		splatTimer1 = splatTimer1 + 1 * Time.deltaTime;//timer for how long splat lasts
 
 		if (splatTimer1 < 0) {
 			ScreenSplat2.SetActive (true);
@@ -116,41 +104,31 @@ public class Player1Script : MonoBehaviour {
 				this.GetComponent<Transform> ().Translate (new Vector3 (0.2f, 0));
 			}
 			if (Input.GetKeyDown (KeyCode.W) && grounded) {
-				playerRigid.velocity = new Vector2 (playerRigid.velocity.x, jumpForce+5); // Jump mechanic, checks to see if player is Grounded to jump
+				playerRigid.velocity = new Vector2 (playerRigid.velocity.x, jumpForce); // Jump mechanic, checks to see if player is Grounded to jump
 				grounded = false;
 			}
 		}
-		//if (Player1Animator.GetAnimatorTransitionInfo (0).IsName ("RunningAnimation1") == false) {
-		//	Player1Animator.Play ("IdleAnimation");
-		//}
 
-		if (freeze == false && speedTimer1 >0 && canDashTimer <0) {
-			//Debug.Log ("Moving"+ canDashTimer);
-
-
+		//Movement left and right
+		if (freeze == false && speedTimer1 > 0 && canDashTimer < 0) {
 			if (Input.GetKey (KeyCode.A)) {
 				this.GetComponent<Transform> ().Translate (new Vector3 (-speed, 0));
-
-
 			}
 			if (Input.GetKey (KeyCode.D)) {
 				this.GetComponent<Transform> ().Translate (new Vector3 (speed, 0));
 			} 
-
-
-
-
-		//	if (Input.GetKeyUp (KeyCode.D)) {
-		//	Player1Animator.Play ("IdleAnimation");
-			
-		//	}
+			//Jump
 			if (Input.GetKeyDown (KeyCode.W) && grounded) {
 				playerRigid.velocity = new Vector2 (playerRigid.velocity.x, jumpForce); // Jump mechanic, checks to see if player is Grounded to jump
 				grounded = false;	
 			}
-
 		}
+
+		//Animation stuff
+		//******************
 		bool isRunning = false;
+		bool isJumping = false;
+		bool isFrozen = false;
 		if (Input.GetKey (KeyCode.D)) {
 			isRunning = true;
 			player.flipX = false;
@@ -162,9 +140,23 @@ public class Player1Script : MonoBehaviour {
 		if (Input.GetKey (KeyCode.A) && Input.GetKey (KeyCode.D)) {
 			isRunning = false;
 		}
-
+		if (Input.GetKey (KeyCode.W)) {
+			isJumping = true;
+		}
+		if (grounded) {
+			isJumping = false;
+		}
+		if (Input.GetKey (KeyCode.W) && Input.GetKey (KeyCode.A)) {
+			isRunning = false;
+		}
+		if (Input.GetKey (KeyCode.W) && Input.GetKey (KeyCode.D)) {
+			isRunning = false;
+		}
 		Player1Animator.SetBool ("isRunning", isRunning);
+		Player1Animator.SetBool ("isJumping", isJumping);
+		//******************
 
+		//Dashing
 		if (Input.GetKey (KeyCode.A) && Input.GetKey (KeyCode.LeftShift) && dashCounter > 0) {
 				playerRigid.velocity = Vector2.zero;
 				playerRigid.gravityScale = 0;
@@ -192,13 +184,8 @@ public class Player1Script : MonoBehaviour {
 		if (canDashTimer < 0) {
 			playerRigid.gravityScale = 4;
 		}
-			
-			//if (grounded == false) {
-			//	playerCollider.isTrigger = true;
-			//} else {
-			//	playerCollider.isTrigger = false;
-			//}
 
+	//Boundaries of the level
 			if (transform.position.x < leftEdge.position.x) {
 				transform.position = new Vector2 (leftEdge.position.x, transform.position.y); //Stops the player from moving past the "RightEdge" Object
 
@@ -241,20 +228,26 @@ public class Player1Script : MonoBehaviour {
 
 		}
 
+		//if hit you get frozen
 		if (hit == true) {
 			freezeTimer -= 1.75f * Time.deltaTime;
-			if (freezeTimer > 0 && freezeTimer < 2) {
+			if (freezeTimer > 0 && freezeTimer < 5) {
 				freeze = true;
+				isFrozen = true;
+				isRunning = false;
+				isJumping = false;
 			}
 			if (freezeTimer < 0) {
 				freeze = false;
-				freezeTimer = 2;
+				freezeTimer = 5;
 				hit = false;
+				isFrozen = false;
 			}
 
-		}
+			Player1Animator.SetBool ("isFrozen", isFrozen);
 
-		//dashTimerText.text = "Dash: " + dashCounter;
+
+		}
 
 		//*******Winning*********//
 
@@ -268,33 +261,30 @@ public class Player1Script : MonoBehaviour {
 	void Shoot1 () {
 		Vector2 firePointPosition = new Vector2 (firePoint.position.x, firePoint.position.y);
 		Vector2 firedirectionPosition = new Vector2 (firedirection1.position.x, firedirection1.position.y);
-		RaycastHit2D hit = Physics2D.Raycast (firePointPosition, firedirectionPosition-firePointPosition, 1000, whatToHit);
+		//RaycastHit2D hit = Physics2D.Raycast (firePointPosition, firedirectionPosition-firePointPosition, 1000, whatToHit);
 		GameObject bulletS = Instantiate (BulletSpritePrefab, firePoint.position, firePoint.rotation);
 		bulletS.GetComponent<BulletScript> ().myCaster = this.gameObject;
 		bulletS.GetComponent<Rigidbody2D>().AddForce ((firedirectionPosition-firePointPosition).normalized*10, ForceMode2D.Impulse);
-		if (hit.collider != null) {
-		}
+		//if (hit.collider != null) {
+		//}
 	}
 	void Shoot2 () {
 		Vector2 firePointPosition = new Vector2 (firePoint.position.x, firePoint.position.y);
 		Vector2 firedirectionPosition2 = new Vector2 (firedirection2.position.x, firedirection2.position.y);
-		RaycastHit2D hit = Physics2D.Raycast (firePointPosition, firedirectionPosition2-firePointPosition, 1000, whatToHit);
+		//RaycastHit2D hit = Physics2D.Raycast (firePointPosition, firedirectionPosition2-firePointPosition, 1000, whatToHit);
 		GameObject bulletS = Instantiate (BulletSpritePrefab, firePoint.position, firePoint.rotation);
 		bulletS.GetComponent<BulletScript> ().myCaster = this.gameObject;
 		bulletS.GetComponent<Rigidbody2D>().AddForce ((firedirectionPosition2-firePointPosition).normalized*10, ForceMode2D.Impulse);
-		if (hit.collider != null) {
-		}
+		//if (hit.collider != null) {
+		//}
 	}
 	void Shoot3 () {
 		Vector2 firePointPosition = new Vector2 (firePoint.position.x, firePoint.position.y);
 		Vector2 firedirectionPosition3 = new Vector2 (firedirection3.position.x, firedirection3.position.y);
-		//RaycastHit2D hit = Physics2D.Raycast (firePointPosition, firedirectionPosition3-firePointPosition, 1000, whatToHit);
 		GameObject bulletS = Instantiate (BulletSpritePrefab, firePoint.position, firePoint.rotation);
 		bulletS.GetComponent<BulletScript> ().myCaster = this.gameObject;
 		bulletS.GetComponent<Rigidbody2D>().AddForce ((firedirectionPosition3-firePointPosition).normalized*10, ForceMode2D.Impulse);
-		//if (hit.collider != null) {
-		//	Debug.Log ("We Hit" + hit.collider.name);
-		//}
+
 
 	}
 	void OnTriggerEnter2D(Collider2D otherObjectT) {
@@ -310,6 +300,7 @@ public class Player1Script : MonoBehaviour {
 		if (otherObjectT.CompareTag ("Splat")) {
 			PickupSplat1 ();
 			Destroy (otherObjectT);
+		
 		}
 	}
 	void OnCollisionEnter2D(Collision2D otherObjectC){
@@ -325,7 +316,6 @@ public class Player1Script : MonoBehaviour {
 	void Pickup1 () {
 		pickupTimer1 = -5;
 		MainCamera2.transform.Rotate (0, 0, 180);
-		//Destroy
 	}
 	void PickupSpeed1 () {
 		speedTimer1 = -5;
@@ -333,6 +323,7 @@ public class Player1Script : MonoBehaviour {
 	void PickupSplat1 () {
 		splatTimer1 = -5;
 		Debug.Log ("PIcked up splat");
+	
 	}
 
 }
