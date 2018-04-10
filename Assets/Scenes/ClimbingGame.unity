@@ -3444,6 +3444,7 @@ GameObject:
   - component: {fileID: 1990726560}
   - component: {fileID: 1990726558}
   - component: {fileID: 1990726557}
+  - component: {fileID: 1990726563}
   - component: {fileID: 1990726559}
   - component: {fileID: 1990726562}
   m_Layer: 10
@@ -3494,7 +3495,7 @@ Rigidbody2D:
   m_AngularDrag: 0.05
   m_GravityScale: 4
   m_Material: {fileID: 0}
-  m_Interpolate: 0
+  m_Interpolate: 2
   m_SleepingMode: 1
   m_CollisionDetection: 0
   m_Constraints: 4
@@ -3553,7 +3554,7 @@ SpriteRenderer:
   m_SortingOrder: 0
   m_Sprite: {fileID: 21300000, guid: 4bfefeb9435b2400bbd5e48ae6198464, type: 3}
   m_Color: {r: 1, g: 0, b: 0.5586209, a: 1}
-  m_FlipX: 1
+  m_FlipX: 0
   m_FlipY: 0
   m_DrawMode: 0
   m_Size: {x: 4, y: 4}
@@ -3597,6 +3598,26 @@ Animator:
   m_WarningMessage: 
   m_HasTransformHierarchy: 1
   m_AllowConstantClipSamplingOptimization: 1
+--- !u!114 &1990726563
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 0}
+  m_GameObject: {fileID: 1990726556}
+  m_Enabled: 0
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: e7a0c6e14d3ca474e879e9d150522622, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  Player1Animator: {fileID: 1990726562}
+  HUD: {fileID: 630824036}
+  ScreenSplat2: {fileID: 0}
+  whatToHit:
+    serializedVersion: 2
+    m_Bits: 512
+  victorypng: {fileID: 21300000, guid: 5df3dc54dd52540b5b25aa3750d3577f, type: 3}
+  BulletSpritePrefab: {fileID: 1337653935649254, guid: 665745dbad3194f0da91a8d8e7256c62,
+    type: 2}
 --- !u!4 &1998444211 stripped
 Transform:
   m_PrefabParentObject: {fileID: 4550117476795176, guid: ae07194b00a8f4d4d85d2c658098deb8,
