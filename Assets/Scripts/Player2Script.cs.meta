@@ -5,7 +5,13 @@ licenseType: Free
 MonoImporter:
   externalObjects: {}
   serializedVersion: 2
-  defaultReferences: []
+  defaultReferences:
+  - BulletSpritePrefab: {fileID: 1593183866379580, guid: 26c8e7fbacc24429abc8eb6ce1a3cd40,
+      type: 2}
+  - HUD: {instanceID: 0}
+  - ScreenSplat1: {fileID: 1802778575949770, guid: e19358fa499fc454183546f66e7d469a,
+      type: 2}
+  - Player2Animator: {instanceID: 0}
   executionOrder: 0
   icon: {instanceID: 0}
   userData: 
