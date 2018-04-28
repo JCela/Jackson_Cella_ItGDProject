@@ -28,5 +28,12 @@ public class Mainmenuscript : MonoBehaviour {
 		if (ready1 == true && ready2 == true) {
 			SceneManager.LoadScene ("ClimbingGame");
 		}
+		if (Input.GetKey (KeyCode.S)) {
+			SceneManager.LoadScene ("Tutorial");
+		}
+		if (Input.GetKey (KeyCode.K)) {
+			SceneManager.LoadScene ("Tutorial");
+		}
+
 	}
 }

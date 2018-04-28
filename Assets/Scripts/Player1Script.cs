@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
+using UnityEngine.SceneManagement;
 
 public class Player1Script : MonoBehaviour {
 
@@ -15,6 +16,8 @@ public class Player1Script : MonoBehaviour {
 	public LayerMask whatToHit;
 	public Sprite victorypng;
 	public GameObject BulletSpritePrefab;
+	public AudioSource PowerUpSound;
+	public AudioSource SplatSound;
 
 	float jumpForce = 14;
 	float speed = 0.1f;
@@ -254,6 +257,7 @@ public class Player1Script : MonoBehaviour {
 		if (p1win == true) {
 			HUD.SetActive (true);
 			freeze = true;
+			SceneManager.LoadScene ("Winner Player 1");
 		}
 	}
 
@@ -262,7 +266,8 @@ public class Player1Script : MonoBehaviour {
 		Vector2 firePointPosition = new Vector2 (firePoint.position.x, firePoint.position.y);
 		Vector2 firedirectionPosition = new Vector2 (firedirection1.position.x, firedirection1.position.y);
 		//RaycastHit2D hit = Physics2D.Raycast (firePointPosition, firedirectionPosition-firePointPosition, 1000, whatToHit);
-		GameObject bulletS = Instantiate (BulletSpritePrefab, firePoint.position, firePoint.rotation);
+		GameObject bulletS = Instantiate (BulletSpritePrefab, firePoint.position, firePoint.rotation );
+		//bulletS.transform.up = Vector3.right;
 		bulletS.GetComponent<BulletScript> ().myCaster = this.gameObject;
 		bulletS.GetComponent<Rigidbody2D>().AddForce ((firedirectionPosition-firePointPosition).normalized*10, ForceMode2D.Impulse);
 		//if (hit.collider != null) {
@@ -273,6 +278,7 @@ public class Player1Script : MonoBehaviour {
 		Vector2 firedirectionPosition2 = new Vector2 (firedirection2.position.x, firedirection2.position.y);
 		//RaycastHit2D hit = Physics2D.Raycast (firePointPosition, firedirectionPosition2-firePointPosition, 1000, whatToHit);
 		GameObject bulletS = Instantiate (BulletSpritePrefab, firePoint.position, firePoint.rotation);
+		bulletS.transform.up = Vector3.right;
 		bulletS.GetComponent<BulletScript> ().myCaster = this.gameObject;
 		bulletS.GetComponent<Rigidbody2D>().AddForce ((firedirectionPosition2-firePointPosition).normalized*10, ForceMode2D.Impulse);
 		//if (hit.collider != null) {
@@ -282,6 +288,7 @@ public class Player1Script : MonoBehaviour {
 		Vector2 firePointPosition = new Vector2 (firePoint.position.x, firePoint.position.y);
 		Vector2 firedirectionPosition3 = new Vector2 (firedirection3.position.x, firedirection3.position.y);
 		GameObject bulletS = Instantiate (BulletSpritePrefab, firePoint.position, firePoint.rotation);
+		bulletS.transform.up = Vector3.right;
 		bulletS.GetComponent<BulletScript> ().myCaster = this.gameObject;
 		bulletS.GetComponent<Rigidbody2D>().AddForce ((firedirectionPosition3-firePointPosition).normalized*10, ForceMode2D.Impulse);
 
@@ -316,13 +323,17 @@ public class Player1Script : MonoBehaviour {
 	void Pickup1 () {
 		pickupTimer1 = -5;
 		MainCamera2.transform.Rotate (0, 0, 180);
+		PowerUpSound.Play ();
 	}
 	void PickupSpeed1 () {
 		speedTimer1 = -5;
+		PowerUpSound.Play ();
+
 	}
 	void PickupSplat1 () {
 		splatTimer1 = -5;
 		Debug.Log ("PIcked up splat");
+		SplatSound.Play ();
 	
 	}
 

@@ -11,3 +11,12 @@ EditorBuildSettings:
   - enabled: 1
     path: Assets/Scenes/ClimbingGame.unity
     guid: 1ffd3193aef894b0c8cb9ef72b26f4a5
+  - enabled: 1
+    path: Assets/Scenes/Winner Player 1.unity
+    guid: 8e91c603e69ad4414ac1c69e2d0bbbbe
+  - enabled: 1
+    path: Assets/Scenes/Winner Player 2.unity
+    guid: 4924bdf6eeed243d9b022f062d27b69b
+  - enabled: 1
+    path: Assets/Scenes/Tutorial.unity
+    guid: e705891755df74e7086e5bb572b1d04c
